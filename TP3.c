@@ -93,8 +93,9 @@ int main(void) {
 	PTD->PTOR |= 1<<5;
 
 	// TEMPORIZADOR ALEATORIO
-	uint32_t tiempo, treinta_segundos;
+	uint32_t tiempo, treinta_segundos, tiempo_fuga;
 	treinta_segundos = SEG30;
+	srand(time(NULL));
 
 	while(1) {
 		switch(estado_actual){
@@ -111,6 +112,7 @@ int main(void) {
 			if (tiempo > treinta_segundos){
 				PTE->PTOR |= 1<<29;
 				tiempo = RETARDO;
+				tiempo_fuga = 1000000*(rand() % 31);
 				proximo_estado = VALVULA_CERRADA;
 			}
 
@@ -124,13 +126,20 @@ int main(void) {
 				tiempo--;
 			}
 
+			if(tiempo_fuga > 0){
+				tiempo_fuga--;
+			}
+
+			if(tiempo_fuga == 0){
+				PTD->PSOR |=1<<5;
+			}
+
 			if(tiempo == 0){
 				PTE->PTOR |= 1<<29;
 				tiempo = RETARDO;
 			}
 
 			if(!(PTC->PDIR & (1<<12))){
-				PTD->PSOR |= 1<<5;
 				PTE->PSOR |= 1<<29;
 				proximo_estado = NORMALIZADO;
 			}
