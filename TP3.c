@@ -143,7 +143,7 @@ int main(void) {
 				proximo_estado = CLOSED_VALVE;			// normalizado.
 			}											//
 														// Si se cierra la valvula,
-			if(PTC->PDIR & (1<<3)){						// se apaga el extractor, y
+			if(PTC->PDIR & (1<<3)){						//
 				PTD->PCOR |= 1<<5;						// se determina un tiempo
 				PTE->PSOR |= 1<<29;						// para cual baje la con-
 				proximo_estado = OPEN_VALVE;			// centracion del gas.
@@ -151,7 +151,7 @@ int main(void) {
 			break;										//
 		// ------------------------------------------------------------------------
 		// VALVULA CERRADA --------------------------------------------------------
-		case CLOSED_VALVE:							// El led verde titila hasta
+		case CLOSED_VALVE:							// El led verde y el led rojo titilan hasta
 			if(titila > 0){							// que se llege al tiempo de
 				titila--;							// fuga determinado.
 			}										//
