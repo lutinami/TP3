@@ -52,9 +52,8 @@ typedef enum{OPEN_VALVE, GAS_WARNING, CLOSED_VALVE} ESTADOS;
 
 
 // Constantes de la implementacion
-//#define SEG30 30000000;		// 30 segundos aproximado
-#define SEG30 18750000
-#define RETARDO 150000;		// retardo para el parpadeo del led
+#define SEG30 18750000		// 30 SEGUNDOS
+#define RETARDO 150000;		// retardo para el parpadeo del led con valvula abierta
 
 
 /*
@@ -138,6 +137,7 @@ int main(void) {
 			}											// mas de 30 segundos,
 			if (tiempo > treinta_segundos){				// se cierra la valvula
 				PTE->PSOR |= 1<<29;						// de gas, pasando a un
+				PTD->PSOR |= 1<<5;
 				titila = RETARDO;						// nuevo estado. Sino,
 				tiempo_fuga = 625000*(rand() % 31);		// se vuelve a un estado
 				proximo_estado = CLOSED_VALVE;			// normalizado.
@@ -161,7 +161,8 @@ int main(void) {
 			}										// manualmente la valvula (pre-
 													// sionar sw3), cambiando de
 			if(tiempo_fuga == 0){					// estado a valvula abierta.
-				PTD->PSOR |=1<<5;					//
+				PTD->PSOR |= 1<<5;					//
+				PTE->PSOR |= 1<<29;					//
 				if(!(PTC->PDIR & (1<<12))){			//
 					proximo_estado = OPEN_VALVE;	//
 				}									//
@@ -169,6 +170,7 @@ int main(void) {
 													//
 			if(titila == 0){						//
 				PTD->PTOR |= 1<<5;					//
+				PTE->PTOR |= 1<<29;
 				titila = RETARDO;					//
 			}										//
 			break;									//
